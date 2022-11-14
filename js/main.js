@@ -12,10 +12,28 @@ const startVideo = () => {
         .catch(err => console.error(err))
 }
 
-const startRecognition = () => {
+const loadLabeledImages = () => {
+    const labels = ['Chris Evans', 'Margot Robbie', 'Scarlett Johansson', 'Tom Holland'];
+    return Promise.all(
+        labels.map(async label => {
+            const descriptions = []
+            for (let i = 1; i <= 3; i++) {
+                const image = await faceapi.fetchImage(`https://github.com/AdasKwoka/AJiO/tree/main/db/labeled-images/${label}/${i}.jpg`)
+                const detections = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptors()
+                descriptions.push(detections.descriptor)
+            }
+
+            return new faceapi.LabeledFaceDescriptors(label, descriptions)
+        })
+    )
+}
+
+const startRecognition = async () => {
     const container = document.createElement('div')
     container.style.position = 'relative'
     imageWrapper.append(container)
+    const labeledDescriptors = await loadLabeledImages()
+    const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, .6)
     imageUpload.addEventListener('change', async () => {
         const image = await faceapi.bufferToImage(imageUpload.files[0])
         imageWrapper.append(image)
@@ -27,9 +45,10 @@ const startRecognition = () => {
         faceapi.matchDimensions(canvas, displaySize)
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        resizedDetections.forEach(detection => {
-            const box = detection.detection.box
-            const drawBox = new faceapi.draw.DrawBox(box, { label: 'Face' })
+        const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
+        results.forEach((result, i) => {
+            const box = resizedDetections[i].detection.box
+            const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
             drawBox.draw(canvas)
         })
     })
