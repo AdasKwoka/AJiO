@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face expression and recognition</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/face-expression.css">
+    <link rel="stylesheet" href="css/face-recognition.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="faceExpression">
+            <h1>Face expression LIVE</h1>
+            <video class="video" width="720" height="560" autoplay muted></video> 
+        </div>
+        <div class="faceRecognition">
+            <h1>Face recognition</h1>
+            <input type="file" class="faceRecognitionInput">
+            <div class="uploadedImage"></div>
+        </div>
+    </div>
+    <script defer src="api/face-api.min.js"></script>
+    <script defer src="js/main.js"></script>
+</body>
+</html>
