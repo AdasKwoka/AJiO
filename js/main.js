@@ -18,8 +18,8 @@ const loadLabeledImages = () => {
         labels.map(async label => {
             const descriptions = []
             for (let i = 1; i <= 3; i++) {
-                const image = await faceapi.fetchImage(`https://github.com/AdasKwoka/AJiO/tree/main/db/labeled-images/${label}/${i}.jpg`)
-                const detections = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptors()
+                const image = await faceapi.fetchImage(`http://127.0.0.1:3001/images/${label}/${i}.jpg`)
+                const detections = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor()
                 descriptions.push(detections.descriptor)
             }
 
@@ -34,10 +34,13 @@ const startRecognition = async () => {
     imageWrapper.append(container)
     const labeledDescriptors = await loadLabeledImages()
     const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, .6)
+    let image, canvas
     imageUpload.addEventListener('change', async () => {
-        const image = await faceapi.bufferToImage(imageUpload.files[0])
+        image && image.remove()
+        canvas && canvas.remove()
+        image = await faceapi.bufferToImage(imageUpload.files[0])
         imageWrapper.append(image)
-        const canvas = faceapi.createCanvasFromMedia(image)
+        canvas = faceapi.createCanvasFromMedia(image)
         canvas.style.top = 0
         canvas.style.left = 0
         container.append(canvas)
@@ -57,19 +60,12 @@ const startRecognition = async () => {
 Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri('../models'),
     faceapi.nets.faceLandmark68Net.loadFromUri('../models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('../models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('../models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('../models'),
     faceapi.nets.faceExpressionNet.loadFromUri('../models')
 ])
     .then(startVideo)
-
-Promise.all([
-    faceapi.nets.faceRecognitionNet.loadFromUri('../models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('../models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('../models')
-])
     .then(startRecognition)
-
-
 
 video.addEventListener('playing', () => {
     const canvas = faceapi.createCanvasFromMedia(video)
