@@ -6,23 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face expression and recognition</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/face-expression.css">
     <link rel="stylesheet" href="css/face-recognition.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <div class="wrapper">
-        <div class="faceExpression">
-            <h1>Face expression LIVE</h1>
+        <div class="start">
+            <h1 class="greetings">Witam wybierz tryb</h1>
+            <button class="feBtn">Otwórz face expression</button>
+            <button class="frBtn">Otwórz face recogintion</button>
+        </div>
+        <div class="faceExpression hidden">
+            <button class="cross">&LeftArrow; Powrót</button>
+            <h1 class="headers">Face expression LIVE</h1>
             <video class="video" width="720" height="560" autoplay muted></video> 
         </div>
-        <div class="faceRecognition">
+        <div class="faceRecognition hidden">
+            <button class="cross">&LeftArrow; Powrót</button>
             <h1>Face recognition</h1>
             <input type="file" class="faceRecognitionInput">
             <div class="uploadedImage"></div>
         </div>
     </div>
     <script defer src="api/face-api.min.js"></script>
-    <script defer src="js/main.js"></script>
+    <script type="module" src="js/face-expression.js"></script>
+    <script type="module" src="js/face-recognition.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
