@@ -7,7 +7,6 @@ class Main {
         this.goBackBtns = document.querySelectorAll('.cross')
         this.startWrapper = document.querySelector('.start')
         this.faceExpression = document.querySelector('.faceExpression')
-        this.faceRecognition = document.querySelector('.faceRecognition')
         this.video = document.querySelector('.video');
     }
 
@@ -20,7 +19,6 @@ class Main {
 
         this.frBtn. addEventListener('click', () => {
             this.startWrapper.classList.toggle('hidden')
-            this.faceRecognition.classList.toggle('hidden')
             const fr = new FaceRecognition()
             fr.startRecognition()
         })
